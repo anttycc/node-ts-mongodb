@@ -1,0 +1,570 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "NODE BACKEND",
+    "license": {
+      "name": "MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "/api",
+      "description": "version-prefix"
+    },
+    {
+      "url": "https://node-backend-typescript.herokuapp.com/api",
+      "description": "production-v1"
+    },
+    {
+      "url": "https://node-backend-typescript.herokuapp.com/api",
+      "description": "development"
+    },
+    {
+      "url": "http://localhost:4000/api",
+      "description": "local"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "required": [
+          "code",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Point": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "ABC"
+          },
+          "description": {
+            "type": "string",
+            "example": "sample"
+          },
+          "category": {
+            "type": "string",
+            "example": "sample",
+            "enum": [
+              "Went well",
+              "Didn’t go well",
+              "Need to improve"
+            ]
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "sample"
+          },
+          "email": {
+            "type": "string",
+            "example": "test@test.com"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": "sample"
+          },
+          "gender": {
+            "type": "string",
+            "example": "Male",
+            "enum": [
+              "Male",
+              "Female",
+              "Other"
+            ]
+          },
+          "password": {
+            "type": "string",
+            "example": "sample"
+          }
+        }
+      }
+    },
+    "responses": {
+      "UnauthorizedError": {
+        "description": "Access token is missing or invalid"
+      },
+      "InvalidParameters": {
+        "description": "Parameters provided are invalid"
+      },
+      "ObjectExistsError": {
+        "description": "Object already exists"
+      }
+    }
+  },
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
+        "summary": "Login to App",
+        "description": "Login to App",
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "email": "test@test.com",
+                  "password": "sample"
+                }
+              }
+            }
+          }
+        },
+        "x-middleware": [
+          "validateBody"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "bearer agsfhghfhdsgdfdsg"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorised"
+          },
+          "409": {
+            "description": "Conflicts"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "422": {
+            "description": "request with invalid data"
+          }
+        }
+      }
+    },
+    "/user": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Create User",
+        "description": "Create User",
+        "operationId": "createUser",
+        "x-middleware": [
+          "validateBody"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/User"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "example": "200"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorised"
+          },
+          "409": {
+            "description": "Conflicts"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "422": {
+            "description": "request with invalid data"
+          }
+        }
+      }
+    },
+    "/point": {
+      "post": {
+        "tags": [
+          "Point"
+        ],
+        "summary": "Create Point",
+        "description": "Create Point",
+        "operationId": "createPoint",
+        "security": [
+          {
+            "BearerAuth": [
+              "default"
+            ]
+          }
+        ],
+        "x-middleware": [
+          "validateBody"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Point"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "example": "200"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorised"
+          },
+          "409": {
+            "description": "Conflicts"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "422": {
+            "description": "request with invalid data"
+          }
+        }
+      }
+    },
+    "/points": {
+      "parameters": [
+        {
+          "in": "query",
+          "name": "search",
+          "description": "value to be match in title and description",
+          "schema": {
+            "type": "string"
+          },
+          "example": "test"
+        },
+        {
+          "in": "query",
+          "name": "sortkey",
+          "description": "key from records should be sorted",
+          "schema": {
+            "type": "string"
+          },
+          "example": "test"
+        },
+        {
+          "in": "query",
+          "name": "order",
+          "description": "order of sorting should be 1 or -1",
+          "schema": {
+            "type": "string"
+          },
+          "example": "1"
+        },
+        {
+          "in": "query",
+          "required": true,
+          "name": "page",
+          "description": "page number",
+          "schema": {
+            "type": "string"
+          },
+          "example": "1"
+        },
+        {
+          "in": "query",
+          "name": "pageSize",
+          "required": true,
+          "description": "page number",
+          "schema": {
+            "type": "string"
+          },
+          "example": "10"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Point"
+        ],
+        "summary": "get Points",
+        "description": "get Points",
+        "operationId": "getPoints",
+        "security": [
+          {
+            "BearerAuth": [
+              "default"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "example": "200"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorised"
+          },
+          "409": {
+            "description": "Conflicts"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "422": {
+            "description": "request with invalid data"
+          }
+        }
+      }
+    },
+    "/point/{id}": {
+      "parameters": [
+        {
+          "in": "path",
+          "required": true,
+          "name": "id",
+          "description": "The id of the record to perform action on.",
+          "schema": {
+            "type": "string"
+          },
+          "example": 11
+        }
+      ],
+      "put": {
+        "tags": [
+          "Point"
+        ],
+        "summary": "Update Point",
+        "description": "Update Point",
+        "operationId": "updatePoint",
+        "security": [
+          {
+            "BearerAuth": [
+              "default"
+            ]
+          }
+        ],
+        "x-middleware": [
+          "validateBody",
+          "authorizeAccess"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Point"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": 1
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorised"
+          },
+          "409": {
+            "description": "Conflicts"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "422": {
+            "description": "request with invalid data"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Point"
+        ],
+        "summary": "Get Point",
+        "description": "Get Point",
+        "operationId": "getPoint",
+        "security": [
+          {
+            "BearerAuth": [
+              "default"
+            ]
+          }
+        ],
+        "x-middleware": [
+          "validateParams",
+          "authorizeAccess"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Point"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "401": {
+            "description": "Unauthorised"
+          },
+          "404": {
+            "description": "customer not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "422": {
+            "description": "request with invalid data"
+          }
+        }
+      }
+    }
+  }
+}

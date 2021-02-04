@@ -1,0 +1,66 @@
+{
+  "user": {
+    "post": {
+      "body": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true,
+            "allowEmpty": false
+          },
+          "gender": {
+            "type": "string",
+            "required": true,
+            "allowEmpty": false,
+            "enum": [
+              "Male",
+              "Female",
+              "Other"
+            ]
+          },
+          "phoneNumber": {
+            "type": "string",
+            "required": true,
+            "allowEmpty": false,
+            "minLength": 10,
+            "maxLength": 13
+          },
+          "email": {
+            "type": "string",
+            "required": true,
+            "allowEmpty": false,
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "required": true,
+            "allowEmpty": false,
+            "pattern": "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$"
+          }
+        }
+      }
+    }
+  },
+  "login": {
+    "post": {
+      "body": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "required": true,
+            "allowEmpty": false
+          },
+          "password": {
+            "type": "string",
+            "required": true,
+            "allowEmpty": false,
+            "pattern": "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$"
+
+          }
+        }
+      }
+    }
+  }
+}

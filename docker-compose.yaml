@@ -1,0 +1,45 @@
+version: "3.7"
+
+services:
+
+  node-backend-db:
+    image: mongo
+    restart: always
+    container_name: node-backend-db
+    ports:
+      - 27017:27017 
+    volumes:
+      - node-backend-db:/data/db
+    networks: 
+      - node-backend-network
+
+  node-backend-api:
+    image: node-backend:1.0.1
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+      target: prod
+    command: >
+       bash -c "npm install -g nodemon
+       && npm run build && nodemon ./dist/server.js"
+    container_name: node-backend-api
+    restart: always
+    volumes: 
+      - .:/app
+      - src/swagger.json ./dist/src/swagger.json
+    ports:
+      - "80:4000"
+    depends_on:
+      - node-backend-db
+    environment:
+      - DB_URL=mongodb://node-backend-db/node-backend-db
+      - PORT=4000
+    networks: 
+      - node-backend-network
+volumes: 
+  node-backend-db:
+    name: node-backend-db
+
+networks: 
+  node-backend-network:
+    name: node-backend-network

@@ -1,0 +1,58 @@
+{
+  "point": {
+    "post": {
+      "body": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "required": true,
+            "allowEmpty": false
+          },
+          "description": {
+            "type": "string",
+            "required": true,
+            "allowEmpty": false
+          },
+          "category": {
+            "type": "string",
+            "required": true,
+            "allowEmpty": false,
+            "enum": [
+              "Went well",
+              "Didn’t go well",
+              "Need to improve"
+            ]
+          }
+        }
+      }
+    },
+    "put": {
+      "body": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "required": true,
+            "allowEmpty": false
+          },
+          "description": {
+            "type": "string",
+            "required": true,
+            "allowEmpty": false
+          },
+          "category": {
+            "type": "string",
+            "required": true,
+            "allowEmpty": false,
+            "enum": [
+              "Went well",
+              "Didn’t go well",
+              "Need to improve"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
