@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc &&cp -r public ./dist/ &&cp -r ./src/validation-schema ./dist/src/validation-schema ",
+    "build": "tsc &&cp -r ./src/validation-schema ./dist/src/validation-schema ",
     "start": "npm run build && node ./dist/server.js"
   },
   "author": "keshav vyavahare",
